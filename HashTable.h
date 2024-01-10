@@ -18,7 +18,7 @@ class HashTable: public Dict<V> {
 	ListLinked<TableEntry<V>>* table;
 
 	int h(std::string key){
-		suma = 0;
+		int suma = 0;
 		for( size_t i=0; i<key.length(); i++){
 			suma += static_cast<int>(key.at(i)); 
 		}
