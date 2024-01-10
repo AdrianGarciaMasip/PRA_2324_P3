@@ -16,7 +16,6 @@ class HashTable: public Dict<V> {
 		ListLinked<TableEntry<V>>* table;
 
 		int h(std::string key){
-			//Suma ASCII caracteres % tamaño tabla hash
 			int sum = 0;
 			for(char c : key){
 				sum += (int)c;
@@ -52,21 +51,17 @@ class HashTable: public Dict<V> {
 			return search(key);
 		}
 
-		//Metodos de Dict.h
 		void insert(std::string key, V value) override{
-			//Utilizar la funcion hash para encontar la cubeta
 			int cubeta = h(key);
-			//comprovar que la key no este repetida | -1 -> no encontrado
 			if(table[cubeta].search(key) == -1){
 				table[cubeta].prepend(TableEntry<V>(key, value));
 			}else{
-				throw std::runtime_error("Key '" + key + "' already exists!");
+				throw std::runtime_error("Key '" + key + "' ya existe.");
 			}
 			n++;
 		}
 
 		V search(std::string key) override{
-			//Buscamos la cubeta en la que podria estas
 			int cubeta = h(key);
 
 			for(int i = 0; i < table[cubeta].size(); i++){
@@ -74,15 +69,14 @@ class HashTable: public Dict<V> {
 					return table[cubeta].get(i).value;
 				}
 			}
-			throw std::runtime_error("Key '" + key + "' not found!");
+			throw std::runtime_error("Key '" + key + "' no encontrada.");
 		}
 
 		V remove(std::string key) override{
-			//Buscamos la cubeta en la que podria estar
-			int cubeta = h(key);                                                                                        //Buscamos la key si devuelve -1 no esta
+			int cubeta = h(key);    
 			int pos = table[cubeta].search(key);
 			if(pos == -1){
-				throw std::runtime_error("Key '" + key + "' not found!");
+				throw std::runtime_error("Key '" + key + "' no encontrada.");
 			}
 			n--;
 			return table[cubeta].remove(pos).value;

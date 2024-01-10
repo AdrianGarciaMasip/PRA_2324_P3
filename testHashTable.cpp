@@ -6,8 +6,8 @@ int main() {
 
     std::cout << dict << std::endl;
     std::cout << "dict.capacity(): " << dict.capacity() << std::endl;
-    std::cout << "dict.entries(): " << dict.entries() << std::endl; 
-    std::cout << std::endl; 
+    std::cout << "dict.entries(): " << dict.entries() << std::endl;
+    std::cout << std::endl;
 
     std::cout << "dict.insert('One', 1) ..." << std::endl;
     dict.insert("One", 1);
@@ -21,14 +21,14 @@ int main() {
     dict.insert("Five", 5);
     std::cout << "dict.insert('Six', 6) ..." << std::endl;
     dict.insert("Six", 6);
-    std::cout << std::endl; 
+    std::cout << std::endl;
 
     std::cout << std::endl << dict << std::endl;
 
     std::cout << "dict.search('One'): " << dict.search("One") << std::endl;
     std::cout << "dict['Four']: " << dict["Four"] << std::endl;
     std::cout << "dict.remove('Three'): " << dict.remove("Three") << std::endl;
-    std::cout << std::endl; 
+    std::cout << std::endl;
 
     std::cout << std::endl << dict << std::endl;
 

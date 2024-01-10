@@ -11,9 +11,9 @@ int main(){
     std::cout << "e1: " << e1 << std::endl;
     std::cout << "e2: " << e2 << std::endl;
     std::cout << "e3: " << e3 << std::endl;
-    
+
     std::cout << std::endl;
-    
+
     std::cout << "e1 == e2 ? " << (e1 == e2) << std::endl;
     std::cout << "e1 != e2 ? " << (e1 != e2) << std::endl;
     std::cout << std::endl;
