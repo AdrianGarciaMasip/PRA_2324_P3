@@ -13,7 +13,7 @@ class BSTree {
 	    BSNode<T>* search(BSNode<T>* n, T e) const{
 		    
 		    if(n == nullptr){
-                            throw std::runtime_error("Error en la busqueda");
+                            throw std::runtime_error("Error a la hora de buscar.");
                     } 
 		    else if(n->elem < e){
 			    return search(n->right, e);
@@ -28,10 +28,10 @@ class BSTree {
 
 	    BSNode<T>* insert(BSNode<T>* n, T e){
 		    if(n == nullptr){
-			    return new BSNode<T>(e); //crea un nuevo nodo
+			    return new BSNode<T>(e);
 		    }
 		    else if(n->elem == e){
-			    throw std::runtime_error("El elemento ya existe");
+			    throw std::runtime_error("Este elemento ya existe");
 		    }
 		    else if(n->elem < e){
 			    n->right = insert(n->right, e);
@@ -42,7 +42,6 @@ class BSTree {
 		    return n;
 	    }
 
-	    //muestra los elementos de menor a mayor
 	   void print_inorder(std::ostream &out, BSNode<T>* n) const{
 		   if(n != nullptr){ 
 		   	if(n->left != nullptr){
@@ -58,9 +57,9 @@ class BSTree {
 	   }
 
 
-	    BSNode<T>* remove(BSNode<T>* n, T e){ //falta el delete!!!
+	    BSNode<T>* remove(BSNode<T>* n, T e){
 		    if(n == nullptr){
-			    throw std::runtime_error("Error en la búsqueda");
+			    throw std::runtime_error("Error a la hora de buscar.");
 		    }
 		    else if (n->elem < e){
 			    n->right = remove(n->right, e);
@@ -89,19 +88,19 @@ class BSTree {
 
 	    T max(BSNode<T>* n) const{
 		    if(n == nullptr){
-			    throw std::runtime_error("Error en la búsqueda");
+			    throw std::runtime_error("Error a la hora de buscar.");
 		    }
 		    else if(n->right != nullptr){
 			    return max(n->right);
 		    }
-		    else{ //encuentra el elemento y lo devuelve
+		    else{
 			    return n->elem;
 		    }
 	    }
 
 	    BSNode<T>* remove_max(BSNode<T>*n){
 		     if(n == nullptr){
-                            throw std::runtime_error("Error en la búsqueda");
+                            throw std::runtime_error("Error a la hora de buscar.");
                     }
 		    
 		     else if(n->right == nullptr){
@@ -146,7 +145,7 @@ class BSTree {
 			    return aux->elem;
 		    }
 		    else{
-			    throw std::runtime_error("Error en la búsqueda");
+			    throw std::runtime_error("Error a la hora de buscar.");
 		    }
 	    }
 	    
