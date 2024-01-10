@@ -10,101 +10,86 @@
 
 template <typename V>
 class HashTable: public Dict<V> {
+	private:
+		int n;
+		int max;
+		ListLinked<TableEntry<V>>* table;
 
-	    private:
-		    int n;
-		    int max;
-		    ListLinked<TableEntry<V>>* table;
-
-		    int h(std::string key){
-		    	int suma = 0;
+		int h(std::string key){
+			//Suma ASCII caracteres % tamaño tabla hash
+			int sum = 0;
 			for(char c : key){
-				suma += (int)c; //Sirver para convertir a ASCII
+				sum += (int)c;
 			}
-			return suma % max;
-		    }
-       
-	    public:
-		    HashTable(int size){
-		    	table = new ListLinked<TableEntry<V>>[size];
-			n = 0;
+
+			return sum % max;
+		}
+	public:
+		HashTable(int size){
+			table = new ListLinked<TableEntry<V>>[size];
 			max = size;
-		    }
+			n = 0;
+		}
 
-		    ~HashTable(){
-		    	delete[] table;
-		    }
+		~HashTable(){
+			delete[] table;
+		}
+		int capacity(){
+			return max;
+		}
 
-		    int capacity(){
-		    	return max;
-		    }
-
-		    friend std::ostream& operator<<(std::ostream &out, const HashTable<V> &th){
-		    	out << "HashTable [entries: " << th.n << ", capacity, " << th.max <<"]" << std::endl << "==============";
-			
+		friend std::ostream& operator<<(std::ostream &out, const HashTable<V> &th){
+			out << "HashTable [entries: " << th.n << ", capacity, " << th.max <<"]" << std::endl << "==============";
 			for(int i = 0; i < th.max; i++){
 				out << "\n\n" << "== Cubeta " << i << " ==" << "\n\n";
 				out << th.table[i];
 			}
 			out << "\n\n" << "==============" << std::endl;
-
 			return out;
-		    }
+		}
 
-		    V operator[](std::string key){
-		    	return search(key);
-		    }
+		V operator[](std::string key){
+			return search(key);
+		}
 
-		    void insert(std::string key, V value)override{
-		    	int cubeta = h(key);
+		//Metodos de Dict.h
+		void insert(std::string key, V value) override{
+			//Utilizar la funcion hash para encontar la cubeta
+			int cubeta = h(key);
+			//comprovar que la key no este repetida | -1 -> no encontrado
 			if(table[cubeta].search(key) == -1){
 				table[cubeta].prepend(TableEntry<V>(key, value));
 			}else{
-				throw std::runtime_error("Key '" + key + "' already exists.");
+				throw std::runtime_error("Key '" + key + "' already exists!");
 			}
 			n++;
-		    }
+		}
 
-		    V search(std::string key) override{
-		    	int cubeta = h(key);
+		V search(std::string key) override{
+			//Buscamos la cubeta en la que podria estas
+			int cubeta = h(key);
+
 			for(int i = 0; i < table[cubeta].size(); i++){
 				if(table[cubeta].get(i).key == key){
 					return table[cubeta].get(i).value;
 				}
 			}
-			throw std::runtime_error("Key '" + key + "' not found.");
-		    }
+			throw std::runtime_error("Key '" + key + "' not found!");
+		}
 
-		    V remove(std::string key) override{
-		    	int cubeta = h(key);
+		V remove(std::string key) override{
+			//Buscamos la cubeta en la que podria estar
+			int cubeta = h(key);                                                                                        //Buscamos la key si devuelve -1 no esta
 			int pos = table[cubeta].search(key);
 			if(pos == -1){
-				throw std::runtime_error("Key '" + key + "' not found.");
+				throw std::runtime_error("Key '" + key + "' not found!");
 			}
 			n--;
 			return table[cubeta].remove(pos).value;
-		    }
+		}
 
-		    int entries()override{
-		    	return n;
-		    }
-
-
+		int entries() override{
+			return n;
+		}
 };
-
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
