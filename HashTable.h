@@ -5,111 +5,95 @@
 #include <stdexcept>
 #include "Dict.h"
 #include "TableEntry.h"
-#include "iostream"
 
-#include "../PRA_2324_P1/PRA_2324_P1/ListLinked.h"  
+#include "../PRA_2324_P1/PRA_2324_P1/ListLinked.h"
 
 template <typename V>
 class HashTable: public Dict<V> {
 
-    private:
-        int n;
-	int max;
-	ListLinked<TableEntry<V>>* table;
+	    private:
+		    int n;
+		    int max;
+		    ListLinked<TableEntry<V>>* table;
+       
+	    public:
+		    HashTable(int size){
+			n = 0;
+		    	max = size;
+			table = new ListLinked<TableEntry<V>>[size]();
+		    }
+		    ~HashTable(){
+		    	delete[] table;
+		    }
 
-	int h(std::string key){
-		int suma = 0;
-		for( size_t i=0; i<key.length(); i++){
-			suma += static_cast<int>(key.at(i)); 
-		}
-		return suma % max;
+		    int h(std::string key){
+			    int acu=0;
+			    for(char c : key){
+			    	acu += c;
+			    }
+			    return acu % max;
+		    }
+		    int capacity(){
+			return max;
+		    }
+		    
+		    friend std::ostream& operator<<(std::ostream &out, const HashTable<V> &th){
+		    	out << "HashTable [entries: "<< th.n <<", capacity: " << th.max << "]"<< std::endl;
+			out << "==============" << std::endl << std::endl;
+			for(int i=0; i<th.max; i++){
+				out << " == Cubeta " << i <<" ==" <<std::endl << std::endl;
+				out << "List => [";
+				if(th.table[i].size() != 0){
+					out << std::endl;
+					for(int j = 0; j < th.table[i].size(); j++){
+						out << "  ('" << th.table[i].get(j).key << "' => " << th.table[i].get(j).value << ")"<< std::endl;
+					}
+				}
+				out << "]" << std::endl << std::endl;
+			}
+			out << "==============" << std::endl;
+			return out;
+		    }
 
-	}
+		    V operator[](std::string key){
+			return search(key);
+		    }
 
-    public:
-       HashTable(int size){
-		table = new ListLinked<TableEntry<V>>[size];
-		n = 0;
-		max = size;
-	}
+		    void insert(std::string key, V value){
+			try{	
+		    	    	search(key);	
 
-	~HashTable(){
-		delete[] table;
-	}
+			}catch(std::runtime_error& e){
+				table[h(key)].prepend(TableEntry<V>(key, value));
+				n++;
+		    		return;
 
-	int capacity(){
-		return max;
-	}
+			}
+			throw std::runtime_error("key '"+key+"' already exists!");
+		    }
 
-	friend std::ostream& operator<<(std::ostream &out, const HashTable<V> &th){
-		out <<"=================="<<std::endl;
+		    V search(std::string key){
+		    	for(int i = 0;  i<table[h(key)].size(); i++){
+				if(table[h(key)].get(i).key == key)
+					return table[h(key)].get(i).value;
+			}
+			throw std::runtime_error("Key '"+key+"' not found!");	
+		    }
+		    V remove(std::string key){
+			    for(int i = 0;  i< table[h(key)].size() ;i++){
+				    if(table[h(key)].get(i).key == key){				    
+					    TableEntry<V> val=table[h(key)].remove(i);
+					    n--;
+					    return val.value;
+				    }
+			    }
+			    throw std::runtime_error("Key '"+key+"' not found!");
+		    }
+		    
+		    int entries(){
+			    return n;
+		    }
 
-		//out<<"HashTable [entries: "<<th->entries()<<", capacity: "<<th->capacity()<<std::endl;
-		for (int i = 0; i < th.max; i++){
-			out<<"Cubeta "<<i<<std::endl<<"List =>  ["<<std::endl<<th.table[i]<<std::endl<<"]"<<std::endl;
-		}
-		out <<"=================="<<std::endl;
-		return out;
-	}
-
-	V operator[](std::string key){
-		int cubeta = h(key);
-		int posicion = table[cubeta].search(key);
-		if(posicion >= 0){
-			return table[cubeta].get(posicion).value;
-		}
-		else{
-			throw std::runtime_error("No se ha podido encontrar la clave");
-		}
-	}
-
-	void insert(std::string key, V value) override{
-		int cubeta = h(key);
-		int posicion = table[cubeta].search(key); 
-
-		if(posicion != -1){
-
-			throw std::runtime_error("La clave ya existe");
-		}
-		
-		else{ 
-			table[cubeta].insert(table[cubeta].size(), TableEntry(key, value));
-			n++;
-		}
-	
-	}
-
-	V search(std::string key) override{
-		int cubeta = h(key);
-                int posicion = table[cubeta].search(key); //esto te devuelve la posicion en la lista de nodos
-                        
-                if (posicion >= 0){
-                	return table[cubeta].get(posicion).value; // llamas a get para que te devuelva el valor     
-                }
-		else{
-			throw std::runtime_error("No se ha podido encontrar la clave");
-                }
-	}
-
-	V remove(std::string key) override{
-		int cubeta = h(key);
-                int posicion = table[cubeta].search(key); //esto te devuelve la posicion en la lista de nodos
-
-                if (posicion >= 0){
-			V valor = table[cubeta].get(posicion).value;
-                        table[cubeta].remove(posicion);
-			n--;
-			return valor;
-                }
-                else{
-                        throw std::runtime_error("No se ha podido encontrar la clave");
-                }
-
-	}
-	int entries() override{
-		return n;
-	} 
-        
 };
 
 #endif
